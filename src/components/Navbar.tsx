@@ -31,7 +31,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
             <img 
-              src="/src/images/logo final.png" 
+              src="/images/logo final.png" 
               alt="Rayan Shop Logo" 
               className="h-12 w-auto object-contain"
             />

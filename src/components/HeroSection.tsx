@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import photo5 from '../images/photo 6.png'; // Import the plant image
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -103,6 +102,13 @@ const HeroSection = () => {
           </div>
 
           {/* Plus d'image à droite */}
+          <div className="flex justify-center lg:justify-end">
+            <img 
+              src="/images/photo 6.png" 
+              alt="Modèle cosmétique" 
+              className="w-full max-w-sm lg:max-w-md h-auto rounded-lg shadow-xl hero-image"
+            />
+          </div>
         </div>
       </div>
     </section>
