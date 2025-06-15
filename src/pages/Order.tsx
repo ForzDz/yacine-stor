@@ -78,6 +78,7 @@ const Order = () => {
     address: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Scroll to top on component mount
   useEffect(() => {
@@ -88,10 +89,36 @@ const Order = () => {
   const shipping = 650; // Coût de livraison fixe
   const total = subtotal + shipping;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle order submission
-    alert('Order placed successfully!');
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/.netlify/functions/submit-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerInfo,
+          cartItems,
+          total,
+        }),
+      });
+
+      if (response.ok) {
+        alert('Commande soumise avec succès ! Vous recevrez bientôt un e-mail de confirmation.');
+        navigate('/'); // Rediriger l'utilisateur vers la page d'accueil après la soumission
+      } else {
+        const errorData = await response.json();
+        alert(`Échec de la soumission de la commande: ${errorData.message || 'Une erreur est survenue.'}`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la soumission de la commande:', error);
+      alert('Une erreur est survenue lors de la soumission de votre commande. Veuillez réessayer.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleWilayaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -233,8 +260,8 @@ const Order = () => {
                   </div>
                 </div>
 
-                <button onClick={handleSubmit} className="w-full bg-emerald-600 text-white py-4 rounded-lg hover:bg-emerald-700 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl">
-                تقديم طلب
+                <button onClick={handleSubmit} disabled={isSubmitting} className={`w-full bg-emerald-600 text-white py-4 rounded-lg transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-700'}`}>
+                  {isSubmitting ? 'Soumission en cours...' : 'تقديم طلب'}
                 </button>
 
                 {/* Trust Badges */}
